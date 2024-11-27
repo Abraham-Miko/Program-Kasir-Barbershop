@@ -65,6 +65,22 @@ void inputNamaPelanggan()
 {
 	cout << "Masukkan Nama Pelanggan: ";
 	getline(cin, namaPelanggan); // nama tidak boleh kosong
+
+    // Memeriksa apakah input mengandung angka
+    bool isNumeric = false;
+    for (char c : namaPelanggan) {
+        if (isdigit(c)) {
+            isNumeric = true;
+            break;
+        }
+    }
+
+    // Mengkondisikan output berdasarkan input
+    if (isNumeric) {
+        std::cout << "Input salah! Hanya kata-kata yang diperbolehkan." << std::endl;
+		inputNamaPelanggan();
+    }
+
 	if (namaPelanggan.empty()) // operasi kondisi (modul 3)
 	{
 		cout << "Nama Tidak Boleh Kosong. Silahkan Coba Lagi.\n";
