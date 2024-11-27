@@ -1,0 +1,217 @@
+#include <iostream>
+#include <limits>
+#include <fstream> // untuk mengeluarkan struk
+#define PAJAK 0.1 // pajak 10%
+using namespace std;
+
+struct Layanan // untuk menampung layanan 
+{
+	string nama;
+	int harga;
+	
+};
+
+Layanan layanan[6] = // pilihan layanannya 
+{
+	{"Kids Haircut", 30000}, // larik/array (modul 5)
+	{"Haircut", 50000},
+	{"Haircut + Wash", 75000},
+	{"Hair Color", 200000},
+	{"Hair Smoothing", 120000},
+	{"Hair Perming", 150000},
+};
+
+string namaPelanggan;
+bool layananDipilih[6] = {false};
+int totalHarga = 0;
+int pembayaran = 0, pajak = 0; 
+int totalBayar = 0; 
+int kembalian = 0;
+
+void tampilanSelamatDatang(); // fungsi/function (modul 6)
+void inputNamaPelanggan();
+void tampilkanLayanan();
+void pilihLayanan();
+void hitungTotal();
+void prosesPembayaran();
+void lanjutanPembayaran();
+void strukPembayaran();
+
+int main() 
+{
+	tampilanSelamatDatang();
+	inputNamaPelanggan();
+	tampilkanLayanan();
+	pilihLayanan();
+	hitungTotal();
+	prosesPembayaran();
+	lanjutanPembayaran();
+	strukPembayaran();
+	return 0;
+}
+
+void tampilanSelamatDatang()
+{
+	cout << "===============================================" << endl;
+	cout << "               SELAMAT DATANG                  " << endl;
+	cout << "===============================================" << endl;
+	cout << "              BARBERSHOP TAMPAN                " << endl;
+	cout << "       Cukur Stylish, Layanan Profesional      " << endl;
+	cout << "===============================================" << endl;
+	cout << endl;
+}
+
+void inputNamaPelanggan() 
+{
+	cout << "Masukkan Nama Pelanggan: ";
+	getline(cin, namaPelanggan); // nama tidak boleh kosong
+	if (namaPelanggan.empty()) // operasi kondisi (modul 3)
+	{
+		cout << "Nama Tidak Boleh Kosong. Silahkan Coba Lagi.\n";
+		inputNamaPelanggan();
+	}
+}
+
+void tampilkanLayanan()
+{
+	cout << "\nLayanan yang Tersedia:" << endl;
+	cout << "-------------------------------------------" << endl;
+	for (int i = 0; i < 6; i++) // perulanan/looping (modul 4)
+	{
+		cout << "[" << i + 1 << "]" << layanan[i].nama << " - Rp " << layanan[i].harga << endl;
+	}
+	cout << "-------------------------------------------\n";
+}
+void pilihLayanan()
+{
+	while (true)
+	{
+		int pilihan;
+		cout << "Masukkan Nomor Layanan Yang Ingin Dipilih (0 Untuk Selesai): ";
+		cin >> pilihan;
+		
+		if (cin.fail() || pilihan < 0 || pilihan > 6)
+		{
+			cin.clear();
+			cin.ignore(numeric_limits<streamsize>::max(), '\n');
+			cout << "Input Tidak Valid. Pilih Nomor Layanan Yang Tersedia.\n";
+			continue;
+		}
+		
+		if (pilihan == 0) break;
+		
+		layananDipilih[pilihan - 1] = true;
+        totalHarga += layanan[pilihan - 1].harga;
+		cout << "Layanan Yang Ditambahkan Ke Dalam Daftar: " << layanan[pilihan - 1].nama << endl;
+		cout << endl;
+	}
+}
+
+void hitungTotal() 
+{
+	system("cls");
+	pajak = static_cast<int>(totalHarga * PAJAK);
+	totalBayar = totalHarga + pajak; // operator (modul 2)
+
+	cout << "====================================================" << endl;
+	cout << "                 BARBERSHOP TAMPAN                  " << endl;
+	cout << "         Cukur Stylish, Layanan Profesional         " << endl;
+	cout << "====================================================" << endl;
+	cout << "----------------------------------------------------" << endl;
+	cout << "Subtotal                         : Rp " << totalHarga << endl;
+	cout << "Pajak (10%)                      : Rp " << pajak << endl;
+	cout << "Total Pembayaran                 : Rp " << totalBayar << endl;
+	cout << "----------------------------------------------------" << endl;
+}
+
+void prosesPembayaran()
+{
+	while (true)
+	{
+		cout << "Masukkan Jumlah Pembayaran       : Rp ";
+		cin >> pembayaran;
+		
+		if (cin.fail() || pembayaran < totalBayar)
+		{
+			cin.clear();
+			cin.ignore(numeric_limits<streamsize>::max(), '\n');
+			cout << "Pembayaran Kurang. Silahkan Masukkan Jumlah Yang Benar.\n";
+			continue;
+		}
+		
+		kembalian = pembayaran - totalBayar;
+		cout << "Pembayaran Berhasil. Kembalian: Rp " << kembalian << endl;
+		break;
+	}
+	
+	cout << "Apakah Anda Ingin Melanjutkan Pembayaran ? " << endl;
+	cout << "Tekan Enter Untuk Ke Proses Selanjutnya ";
+	lanjutanPembayaran();
+}
+
+void lanjutanPembayaran()
+{
+	system("cls");
+	cout << endl;
+	cout << "-----------------------------------------------------------------" << endl;
+	cout << "|                    BARBERSHOP TAMPAN                           |" << endl;
+	cout << "-----------------------------------------------------------------" << endl;
+	cout << "Total Pembayaran                : Rp " << totalBayar << endl;
+	cout << "Uang Yang Telah Dibayarkan      : Rp." << pembayaran << endl;
+	cout << "Uang Kembalian                  : Rp." << kembalian << endl;
+	cout << endl;
+	
+	cout << "Apakah Anda Ingin Mencetak Struk Pembayaran ? " << endl;
+	cout << "[0= Cetak Struk / Ketik Terserah Untuk Keluar] = ";
+	char back;
+	cin >> back;
+	
+	if (back == '0')
+	{
+		system("cls");
+		strukPembayaran();
+	}
+	else {
+		system("cls");
+		cout << "Terimakasih Telah Berkunjung Di Barbershop Gacor!" << endl;
+	}
+}
+
+void strukPembayaran() // pengelolaan file (modul 8)
+{
+	ofstream struk;
+	struk.open("struk.txt");
+	struk << endl;
+	
+	struk << "======================================================================" << endl;
+	struk << "                         BARBERSHOP TAMPAN                            " << endl;
+	struk << "                   Cukur Stylish, Layanan Profesional                 " << endl;
+	struk << "======================================================================" << endl;
+	struk << "Nama Pelanggan: " << namaPelanggan << endl;
+	struk << "----------------------------------------------------------------------" << endl;
+	struk << "Layanan Yang Diambil: " << endl;
+	
+	for (int i = 0; i < 6; i++)
+	{
+		if (layananDipilih[i])
+		{
+			struk << "- " << layanan[i].nama << " - Rp " << layanan[i].harga << endl;
+		}
+	}
+	
+	struk << "----------------------------------------------------------------------" << endl;
+	struk << "Subtotal                     : Rp " << totalHarga << endl;
+	struk << "Pajak (10%)                  : Rp " << pajak << endl;
+	struk << "Total Pembayaran             : Rp " << totalBayar << endl;
+	struk << "Pembayaran                   : Rp " << pembayaran << endl;
+	struk << "Kembalian                    : Rp " << kembalian << endl;
+	struk << "----------------------------------------------------------------------" << endl;
+	struk << "                        TERIMA KASIH TELAH DATANG!                    " << endl;
+	struk << "----------------------------------------------------------------------" << endl;
+	struk << "                        RAMBUT MU SUMBER CUAN KU :)                   " << endl;
+	struk << "======================================================================" << endl;
+	
+	struk.close();
+	system("notepad.exe struk.txt");
+	system("cls");
+}
